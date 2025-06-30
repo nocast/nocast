@@ -1,0 +1,18 @@
+[package]
+name = "nocastpb"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+serde = { version = "1.0.219", features = ["derive"]}
+toml = "0.8.23"
+eframe = "0.31.1"
+egui = "0.31.1"
+winit = "0.29.15"
+regex = "1.11.1"
+device_query = "3.0.1"
+deno_error = "=0.5.5"
+rustyscript = { git = 'https://github.com/rscarson/rustyscript', rev = '58c198e543e48e5cf296a70229037c82a2816290', features = [
+  "all_extensions",
+  "node_experimental",
+] }
