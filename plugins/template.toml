@@ -1,0 +1,11 @@
+name = "template"
+version = "0.0.1"
+author = "roger"
+license = "MIT"
+source = "."
+
+[[actions]]
+name = "process_input"
+expression = "(.*)"
+function = "process_input"
+autorun = true
