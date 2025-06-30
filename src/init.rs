@@ -23,7 +23,7 @@ pub fn load_plugins(config: &generic_types::Config) -> Vec<generic_types::Plugin
     for m in manifests{
         plugins.push(generic_types::Plugin{
             name: m.name.clone(),
-            path: path.clone() + config.plugins.get(&m.name).expect("Could not read plugin path").as_str(),
+            path: path.clone() + &config.plugins.get(&m.name).expect("Could not read plugin path").as_str().replace(".toml",".so"),
             actions: m.actions, 
         })
     }

@@ -10,7 +10,7 @@ pub struct Config {
 pub struct PluginAction{
     pub name: String, 
     pub expression: String,
-    pub file: String,
+    pub function: String,
     pub autorun: bool
 }   
 
@@ -45,7 +45,8 @@ pub struct Item {
     pub image: String, 
     pub keyborad_shorcut: String,
     pub path: String,
-    pub params: Vec<String>
+    pub params: Vec<String>,
+    pub function: String
 }
 
 pub struct NocastApp {

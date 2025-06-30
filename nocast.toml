@@ -1,2 +1,3 @@
 [plugins]
-linuxapplauncher = "/plugins/linuxapplauncher/"
+template = "/plugins/template.toml"
+
