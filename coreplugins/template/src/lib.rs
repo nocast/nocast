@@ -16,7 +16,7 @@ pub extern "C" fn process_input(input: *const c_char) -> *mut c_char {
     let input_vec: Vec<String> = serde_json::from_str(input_str).unwrap();
 
     let mut res: Vec<ActionOutput> = Vec::new();
-    res.push(ActionOutput {name: "some".to_string(), description: "thing".to_string(), target: "else".to_string()});
+    res.push(ActionOutput {name: "some".to_string(), description: "thing".to_string(), target: "else,a".to_string()});
 
     let output_json = serde_json::to_string(&res).unwrap();
     CString::new(output_json).unwrap().into_raw()

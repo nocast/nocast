@@ -37,7 +37,10 @@ pub fn run_item_at(selecting: i16, main: &mut NocastApp){
     for o in output{
         let mut params: Vec<String> = Vec::new();
         params.push(main.query.clone());
-        items.push(Item {title: (o.name), description: o.description, path: new_item.clone().path, function: o.target, params, keyborad_shorcut: new_item.clone().keyborad_shorcut, image: new_item.clone().image});
+        let mut target = o.target.split(',');
+   	 let tfn = target.next().unwrap().to_string();  // "hello"
+   	 let tctx = target.next().unwrap().to_string();    // "bye"
+        items.push(Item {title: (o.name), content: tctx, description: o.description, path: new_item.clone().path, function: tfn, params, keyborad_shorcut: new_item.clone().keyborad_shorcut, image: new_item.clone().image});
     }
     main.current_items = items;
 }
@@ -54,14 +57,17 @@ pub fn query_items(main: &NocastApp) -> Vec<Item> {
                     .map(|m| m.map_or("".to_string(), |mat| mat.as_str().to_string()))
                     .collect();
 
-                let new_item = Item { title: (&a.name).clone(), description: ((&pl.name).clone()), image: (String::from("")), keyborad_shorcut: (String::from("")), path: ((&pl.path).clone()), params: (groups), function:  a.function };
+                let new_item = Item { title: (&a.name).clone(), content: String::new(), description: ((&pl.name).clone()), image: (String::from("")), keyborad_shorcut: (String::from("")), path: ((&pl.path).clone()), params: (groups), function:  a.function };
 
                 if a.autorun{
                     let output = run_item(&new_item);
                     for o in output{
                         let mut params: Vec<String> = Vec::new();
                         params.push(main.query.clone());
-                        items.push(Item {title: (o.name), description: o.description, path: new_item.clone().path, function: o.target,  params, keyborad_shorcut: new_item.clone().keyborad_shorcut, image: new_item.clone().image});
+                        let target: Vec<&str> = o.target.split(',').collect();
+    					let tfn = target[0].to_string();
+    					let tctx = target[1].to_string();
+                        items.push(Item {title: (o.name), content: tctx, description: o.description, path: new_item.clone().path, function: tfn,  params, keyborad_shorcut: new_item.clone().keyborad_shorcut, image: new_item.clone().image});
                     }
                 }
                 else{

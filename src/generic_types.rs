@@ -46,7 +46,8 @@ pub struct Item {
     pub keyborad_shorcut: String,
     pub path: String,
     pub params: Vec<String>,
-    pub function: String
+    pub function: String,
+    pub content: String
 }
 
 pub struct NocastApp {
