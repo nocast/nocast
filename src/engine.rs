@@ -27,7 +27,9 @@ pub fn run_plugin(path: String, target_function: String, input: Vec<String>) -> 
 
 pub fn run_item(item: &Item) -> Vec<ActionOutput> {
     // Add item running
-    return run_plugin(item.clone().path, item.clone().function, item.clone().params);
+    let mut params = item.clone().params;
+    params.insert(0, item.clone().content); 
+    return run_plugin(item.clone().path, item.clone().function, params);
 }
 
 pub fn run_item_at(selecting: i16, main: &mut NocastApp){
