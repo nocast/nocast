@@ -1,11 +1,11 @@
-name = "linuxapplauncher"
+name = "template"
 version = "0.0.1"
 author = "roger"
 license = "MIT"
 source = "."
 
 [[actions]]
-name = "list-apps"
+name = "process_input"
 expression = "(.*)"
-file = "list-apps.js"
+function = "process_input"
 autorun = true

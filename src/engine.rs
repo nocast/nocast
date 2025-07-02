@@ -1,36 +1,35 @@
 use crate::generic_types::{Item, ActionOutput, NocastApp};
 use regex::*;
-use rustyscript::{json_args, Runtime, Module, Error};
 use std::fs;
 use std::str;
+use std::ffi::{CString, CStr};
+use std::os::raw::c_char;
+use libloading::{Library, Symbol};
+
+type PluginFunction = unsafe fn(input: *const c_char) -> *mut c_char;
+
+pub fn run_plugin(path: String, target_function: String, input: Vec<String>) -> Vec<ActionOutput> {
+    let input_json = serde_json::to_string(&input).unwrap();
+    let c_input = CString::new(input_json).unwrap();
+
+    unsafe {
+        let lib = Library::new(path).unwrap(); // Change path accordingly
+        let func: Symbol<PluginFunction> = lib.get(target_function.as_bytes()).unwrap();
+
+        let raw_output = func(c_input.as_ptr());
+        let output_cstr = CString::from_raw(raw_output);
+        let output_str = output_cstr.to_str().unwrap();
+
+        let outputs: Vec<ActionOutput> = serde_json::from_str(output_str).unwrap();
+        return outputs;
+    }
+}
 
 pub fn run_item(item: &Item) -> Vec<ActionOutput> {
-    let file_bytes: &'static [u8] = include_bytes!("../plugincore.js");
-
-    // Convert the byte slice to a string slice (assumes the file is valid UTF-8)
-    let jsutils: &str = match str::from_utf8(file_bytes) {
-        Ok(s) => s,
-        Err(e) => {
-            eprintln!("Failed to parse file as UTF-8: {}", e);
-            "console.error('Could not load plugincore.js')"
-        }
-    };
-
-    // Load main JS script from file
-    let script_code = fs::read_to_string(&item.path).expect("Could not read plugin content");
-
-    // Combine utils and main script
-    let full_script = format!("{}\n{}", jsutils, script_code);
-    
-    let module = Module::new("plugin.js", &full_script);
-
-    let value: Vec<ActionOutput> = Runtime::execute_module(
-        &module, vec![],
-        Default::default(),
-        json_args!(item.params)
-    ).expect("Could not evaluate plugin");
-
-    return value;
+    // Add item running
+    let mut params = item.clone().params;
+    params.insert(0, item.clone().content); 
+    return run_plugin(item.clone().path, item.clone().function, params);
 }
 
 pub fn run_item_at(selecting: i16, main: &mut NocastApp){
@@ -40,7 +39,10 @@ pub fn run_item_at(selecting: i16, main: &mut NocastApp){
     for o in output{
         let mut params: Vec<String> = Vec::new();
         params.push(main.query.clone());
-        items.push(Item {title: (o.name), description: o.description, path: o.target, params, keyborad_shorcut: new_item.clone().keyborad_shorcut, image: new_item.clone().image});
+        let mut target = o.target.split(',');
+   	 let tfn = target.next().unwrap().to_string();  // "hello"
+   	 let tctx = target.next().unwrap().to_string();    // "bye"
+        items.push(Item {title: (o.name), content: tctx, description: o.description, path: new_item.clone().path, function: tfn, params, keyborad_shorcut: new_item.clone().keyborad_shorcut, image: new_item.clone().image});
     }
     main.current_items = items;
 }
@@ -57,14 +59,17 @@ pub fn query_items(main: &NocastApp) -> Vec<Item> {
                     .map(|m| m.map_or("".to_string(), |mat| mat.as_str().to_string()))
                     .collect();
 
-                let new_item = Item { title: (&a.name).clone(), description: ((&pl.name).clone()), image: (String::from("")), keyborad_shorcut: (String::from("")), path: ((&pl.path).clone() + a.file.as_str()), params: (groups) };
+                let new_item = Item { title: (&a.name).clone(), content: String::new(), description: ((&pl.name).clone()), image: (String::from("")), keyborad_shorcut: (String::from("")), path: ((&pl.path).clone()), params: (groups), function:  a.function };
 
                 if a.autorun{
                     let output = run_item(&new_item);
                     for o in output{
                         let mut params: Vec<String> = Vec::new();
                         params.push(main.query.clone());
-                        items.push(Item {title: (o.name), description: o.description, path: o.target, params, keyborad_shorcut: new_item.clone().keyborad_shorcut, image: new_item.clone().image});
+                        let target: Vec<&str> = o.target.split(',').collect();
+    					let tfn = target[0].to_string();
+    					let tctx = target[1].to_string();
+                        items.push(Item {title: (o.name), content: tctx, description: o.description, path: new_item.clone().path, function: tfn,  params, keyborad_shorcut: new_item.clone().keyborad_shorcut, image: new_item.clone().image});
                     }
                 }
                 else{
