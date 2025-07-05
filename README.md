@@ -10,5 +10,4 @@ Currently, the only way to install this is building it from source. To do it you
 which you can install with [the normal Rust installation](https://rustup.rs/).
 
 ## Creating plugins
-Right now, we're working on a guide for plugin developers. While we're working on it, you can learn how plugins work
-by seing how the core plugins function.
+See [the dev guide](DEV.md)

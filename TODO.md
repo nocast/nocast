@@ -1,2 +1,2 @@
 # TODO
-- [ ] Add plugin installer and uninstaller
+- [x] Add plugin installer and uninstaller
