@@ -9,5 +9,10 @@ It's written in Rust, with a plugin system supporting precompiled rust plugins f
 Currently, the only way to install this is building it from source. To do it you need [cargo](https://doc.rust-lang.org/cargo/),
 which you can install with [the normal Rust installation](https://rustup.rs/).
 
+With rust installed, run the following commands:
+- `git clone https://github.com/roger-padrell/nocastpb.git`
+- `cd nocastpb`
+- `cargo install`
+
 ## Creating plugins
 See [the dev guide](DEV.md)
