@@ -1,3 +1,2 @@
 [plugins]
-template = "/plugins/template.toml"
-
+linuxlauncher = "/home/roger/Projects/rust/nocastpb/./plugins/linuxlauncher.toml"

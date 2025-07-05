@@ -16,14 +16,13 @@ pub fn load_config() -> generic_types::Config {
 pub fn load_plugins(config: &generic_types::Config) -> Vec<generic_types::Plugin> {
     // test and read Vec<PluginManifest>
     let manifests = test_plugins(&config);
-    let path = utils::bin_path();
 
     // transform Vec<PluginManifest> into Vec<Plugin>
     let mut plugins: Vec<generic_types::Plugin> = Vec::new();
     for m in manifests{
         plugins.push(generic_types::Plugin{
             name: m.name.clone(),
-            path: path.clone() + &config.plugins.get(&m.name).expect("Could not read plugin path").as_str().replace(".toml",".so"),
+            path: config.plugins.get(&m.name).expect("Could not read plugin path").replace(".toml",".so"),
             actions: m.actions, 
         })
     }

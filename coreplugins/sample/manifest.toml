@@ -1,0 +1,11 @@
+name = "sample"
+version = "0.0.1"
+author = "roger"
+license = "MIT"
+source = "."
+
+[[actions]]
+name = "sample"
+expression = "(.*)"
+function = "sample"
+autorun = true

@@ -21,6 +21,11 @@ pub fn run_plugin(path: String, target_function: String, input: Vec<String>) -> 
         let output_str = output_cstr.to_str().unwrap();
 
         let outputs: Vec<ActionOutput> = serde_json::from_str(output_str).unwrap();
+        
+        if outputs.is_empty(){
+            std::process::exit(0);
+        }
+        
         return outputs;
     }
 }
