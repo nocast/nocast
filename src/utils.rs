@@ -2,7 +2,7 @@ use std::env;
 use std::path::PathBuf;
 
 pub fn bin_path() -> String{
-    return String::from(".");
+	return String::from(".");
     match env::current_exe() {
         Ok(exe_path) => {
             let dir = exe_path.parent().unwrap();

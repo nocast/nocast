@@ -5,7 +5,6 @@ use std::fs;
 
 pub fn load_config() -> generic_types::Config {
     let path = utils::bin_path();
-
     let toml_content = fs::read_to_string(path + "/nocast.toml").expect("Could not read configuration file");
 
     let cont: generic_types::Config = toml::from_str(&toml_content).expect("Could not parse configuration file");
