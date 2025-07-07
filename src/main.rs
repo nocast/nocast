@@ -17,6 +17,9 @@ fn main(){
     if (args.len() < 2){
     	start_app();
 	}
+    else if args[1] == "list"{
+		crate::managepl::list_plugins();
+    }
     else if args[1] == "install"{
         if args.len() > 2 {
     		crate::managepl::install_plugin(args[2].clone());

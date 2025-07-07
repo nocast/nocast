@@ -137,6 +137,33 @@ pub fn install_plugin(name: String) {
     }
 }
 
+pub fn list_plugins() {
+    let mut config_cont = load_config();
+    for (name, plugin) in config_cont.plugins{
+        println!("{}", name);
+    }
+}
+
 pub fn uninstall_plugin(name: String) {
+    // open config
+    let mut config_cont = load_config();
     
+	// check if plugin is installed
+    if !config_cont.plugins.contains_key(&name){
+        println!("Plugin '{}' is not installed or does not exist", &name);
+        std::process::exit(1);
+    }
+    
+    // remove plugin from config
+    config_cont.plugins.remove(&name);
+    fs::write(bin_path() + "/nocast.toml", toml::to_string_pretty(&config_cont).expect("Could not generate config file")).expect("Could not write config file");
+
+	// remove core
+    let target_path = bin_path() + "/plugins/";
+    fs::remove_file((target_path.clone() + &name) + ".so").expect("Could not remove core");
+    
+    // remove manifest
+    fs::remove_file((target_path.clone() + &name) + ".toml").expect("Could not remove manifest");
+    
+    println!("Successfully uninstalled '{}'!", &name);
 }
