@@ -122,7 +122,7 @@ fn install_git_plugin (repo: String) {
     install_local_plugin(bin_path() + "/templugin");
     
     // remove templguin
-    fs::remove_dir(bin_path() + "/templugin").expect("Could not remove templugin dir");
+    fs::remove_dir_all(bin_path() + "/templugin").expect("Could not remove templugin dir");
 }
 
 pub fn install_plugin(name: String) {

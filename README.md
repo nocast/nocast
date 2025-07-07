@@ -12,7 +12,8 @@ which you can install with [the normal Rust installation](https://rustup.rs/).
 With rust installed, run the following commands:
 - `git clone https://github.com/roger-padrell/nocastpb.git`
 - `cd nocastpb`
-- `cargo install`
+- `cargo install --path .`
+- `nocast setup`
 
 ## Creating plugins
 See [the dev guide](DEV.md)
