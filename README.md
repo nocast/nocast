@@ -1,3 +1,4 @@
+
 # NoCast
 > Where light does not reach, darkness reigns.
 
@@ -10,8 +11,8 @@ Currently, the only way to install this is building it from source. To do it you
 which you can install with [the normal Rust installation](https://rustup.rs/).
 
 With rust installed, run the following commands:
-- `git clone https://github.com/roger-padrell/nocastpb.git`
-- `cd nocastpb`
+- `git clone https://github.com/roger-padrell/nocast`
+- `cd nocast`
 - `cargo install --path .`
 - `nocast setup`
 
