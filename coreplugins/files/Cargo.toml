@@ -1,12 +1,14 @@
 [package]
-name = "sample"
+name = "files"
 version = "0.1.0"
 edition = "2024"
 crate-type = ["cdylib"]
 
 [lib]
-name = "sample"
+name = "files"
 crate-type = ["cdylib"]
 
 [dependencies]
 nocast_plugincore = { git = "https://github.com/roger-padrell/nocast_plugincore" }
+rayon = "1.10.0"
+walkdir = "2.5.0"

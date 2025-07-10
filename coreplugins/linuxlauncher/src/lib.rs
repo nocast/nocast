@@ -25,6 +25,6 @@ pub extern "C" fn openapp(input: plugin_input) -> plugin_output {
     runexec::run_exec(&input_vec[0]);
     
     let mut res: Vec<ActionOutput> = Vec::new();
-
+	res.push(ActionOutput {name: "{exit}".to_string(), description: String::new(), target: "exit,now".to_string()});
     return prepare_output(res);
 }

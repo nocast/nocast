@@ -1,3 +1,6 @@
+use crate::utils::bin_path;
+use std::fs;
+
 pub fn setup(){
     // Config and plugin dirs
     println!("- NOCAST setup");

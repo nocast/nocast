@@ -22,7 +22,7 @@ pub fn run_plugin(path: String, target_function: String, input: Vec<String>) -> 
 
         let outputs: Vec<ActionOutput> = serde_json::from_str(output_str).unwrap();
         
-        if outputs.is_empty(){
+        if !outputs.is_empty() && outputs[0].name == "{exit}"{
             std::process::exit(0);
         }
         

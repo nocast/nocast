@@ -12,7 +12,7 @@ autorun = true
 
 [[actions]]
 name = "openapp"
-expression = "(.*)"
+expression = "a^"
 function = "openapp"
 autorun = false
 
