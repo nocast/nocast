@@ -5,7 +5,13 @@ license = "MIT"
 source = "."
 
 [[actions]]
-name = "sample"
+name = "search_files"
 expression = "(.*)"
-function = "sample"
+function = "search_files"
 autorun = true
+
+[[actions]]
+name = "copy_path"
+expression = "a^"
+function = "copy_path"
+autorun = false
