@@ -5,14 +5,17 @@ use arboard::Clipboard;
 #[unsafe(no_mangle)]
 pub extern "C" fn operation(input: plugin_input) -> plugin_output {
     let input_vec: Vec<String> = parse_input(input);
-    
-    let result: f64 = eval_str(&input_vec[1]).expect("Could not solve math operation");
-    
-    let mut res: Vec<ActionOutput> = Vec::new();
-    
-    res.push(ActionOutput {name: (&result).to_string(), description: input_vec[1].clone(), target: format!("copy_result,{}", &result)});
 
-    return prepare_output(res);
+	match eval_str(&input_vec[1]) {
+        Ok(result) => {
+            let mut res: Vec<ActionOutput> = Vec::new();
+    		res.push(ActionOutput {name: (&result).to_string(), description: input_vec[1].clone(), target: format!("copy_result,{}", &result)});
+    		return prepare_output(res);
+    	},
+        Err(_) => {
+			 return prepare_output(Vec::new());
+        },
+    }
 }
 
 #[unsafe(no_mangle)]

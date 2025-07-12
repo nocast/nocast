@@ -1,0 +1,2 @@
+[plugins]
+calculator = "./plugins/calculator.toml"
