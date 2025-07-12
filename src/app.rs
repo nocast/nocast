@@ -29,7 +29,7 @@ impl NocastApp {
     pub fn new(cc: &eframe::CreationContext<'_>, wc: (egui::Pos2, egui::Vec2)) -> Self {
         let config = init::load_config();
         let plugins = init::load_plugins(&config);
-        match dark_light::detect().unwrap_or_default(dark_light::Mode::Unspecified) {
+        match dark_light::detect().unwrap_or(dark_light::Mode::Unspecified) {
         	dark_light::Mode::Dark => {
             	Self {
             		config: config,
