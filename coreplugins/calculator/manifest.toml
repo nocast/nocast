@@ -11,6 +11,12 @@ function = "operation"
 autorun = true
 
 [[actions]]
+name = "lenght_convert"
+expression = "\\b(\\d+(\\.\\d+)?)(\\s*)(cm|centimeters?|m|meters?|mm|millimeters?|km|kilometers?|in|inches|ft|feet|yd|yards?|mi|miles?)\\s*(in|to|→)\\s*(cm|centimeters?|m|meters?|mm|millimeters?|km|kilometers?|in|inches|ft|feet|yd|yards?|mi|miles?)\\b"
+function = "lenght_convert"
+autorun = true
+
+[[actions]]
 name = "copy_result"
 expression = "a^"
 function = "copy_result"
