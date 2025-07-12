@@ -1,3 +1,4 @@
 **/target/
 /plugins/*
 **/templugin/
+**/nocast.toml

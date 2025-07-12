@@ -1,4 +1,0 @@
-[plugins]
-linuxlauncher = "./plugins/linuxlauncher.toml"
-calculator = "./plugins/calculator.toml"
-files = "./plugins/files.toml"
