@@ -3,9 +3,10 @@ use egui::{Color32, Pos2, Vec2};
 use std::collections;
 
 use crate::{ui, engine, init};
-use crate::config::*;
+use crate::config::load_theme;
 use crate::generic_types::{Item, NocastApp, Config};
 use crate::win::{MAX_ITEMS, get_window};
+use dark_light;
 
 impl Default for NocastApp {
     fn default() -> Self {
@@ -19,25 +20,49 @@ impl Default for NocastApp {
             config: Config {
                 plugins: (std::collections::HashMap::new()),
             },
+            theme: crate::config::load_theme(true)
         }
     }
 }
 
 impl NocastApp {
-    pub fn new(_cc: &eframe::CreationContext<'_>, wc: (egui::Pos2, egui::Vec2)) -> Self {
+    pub fn new(cc: &eframe::CreationContext<'_>, wc: (egui::Pos2, egui::Vec2)) -> Self {
         let config = init::load_config();
         let plugins = init::load_plugins(&config);
-        Self {
-            config: config,
-            plugins: plugins,
-            wc: wc,
-            ..Default::default()
-        }
+        match dark_light::detect().expect("Error detecting theme preferences") {
+        	dark_light::Mode::Dark => {
+            	Self {
+            		config: config,
+            		plugins: plugins,
+            		theme: load_theme(true),
+            		wc: wc,
+            		..Default::default()
+        		}
+        	},
+        	dark_light::Mode::Light => {
+            	Self {
+            		config: config,
+            		plugins: plugins,
+            		theme: load_theme(false),
+            		wc: wc,
+            		..Default::default()
+        		}
+        	},
+        	dark_light::Mode::Unspecified => {
+            	Self {
+            		config: config,
+            		plugins: plugins,
+            		theme: load_theme(true),
+            		wc: wc,
+            		..Default::default()
+        		}
+        	},
+    	}
     }
 }
 
 const FONT_SIZE_DEDUCTION: f32 = 0.9;
-const SCROLLING_AMOUNT_CONST: i8 = 42;
+const SCROLLING_AMOUNT_CONST: i8 = 47;
 
 pub fn start_app() {
     let window_const = get_window();
@@ -65,21 +90,6 @@ pub fn start_app() {
 
 impl eframe::App for NocastApp {
     fn update(&mut self, ctx: &egui::Context, frame: &mut eframe::Frame) {
-        //style
-        let mut style = (*ctx.style()).clone();
-        style.visuals.window_fill =
-            egui::Color32::from_rgba_premultiplied(WINDOW_BG, WINDOW_BG, WINDOW_BG, WINDOW_OPACITY); // Semi-dark glass
-        style.visuals.panel_fill =
-            egui::Color32::from_rgba_premultiplied(WINDOW_BG, WINDOW_BG, WINDOW_BG, WINDOW_OPACITY); // More transparent
-        style.visuals.window_stroke =
-            egui::Stroke::new(WINDOW_STROKE, egui::Color32::from_white_alpha(40));
-        style.visuals.widgets.noninteractive.bg_fill = egui::Color32::from_white_alpha(20);
-        // Text and element styling
-        style.visuals.override_text_color = Some(egui::Color32::WHITE);
-        style.visuals.widgets.inactive.bg_fill = egui::Color32::from_white_alpha(40);
-        style.visuals.widgets.hovered.bg_fill = egui::Color32::from_white_alpha(60);
-        style.visuals.widgets.active.bg_fill = egui::Color32::from_white_alpha(80);
-        ctx.set_style(style);
         //Instantiate font
         let mut fonts = egui::FontDefinitions::default();
         // Install my own font (maybe supporting non-latin characters):
@@ -113,9 +123,21 @@ impl eframe::App for NocastApp {
             } else if i.key_pressed(egui::Key::Enter) {
                 engine::run_item_at(self.selecting, self);
                 i.consume_key(egui::Modifiers::NONE, egui::Key::Enter);
+            } else if i.key_pressed(egui::Key::Escape) {
+                std::process::exit(0);
             }
         });
 
+		//background
+        let painter = ctx.layer_painter(egui::LayerId::background());
+
+    	let screen_rect = ctx.screen_rect();
+    	painter.rect_filled(
+       	 screen_rect,
+       	 0.0,
+       	 self.theme.WINDOW_BG
+        );
+        
         //render
         egui::CentralPanel::default()
             .frame(egui::Frame {
@@ -135,24 +157,9 @@ impl eframe::App for NocastApp {
                     egui::TextEdit::singleline(&mut self.query)
                         .hint_text("Search...")
                         .font(egui::TextStyle::Monospace)
-                        .text_color(Color32::from_rgba_premultiplied(
-                            INPUT_TEXT_COLOR,
-                            INPUT_TEXT_COLOR,
-                            INPUT_TEXT_COLOR,
-                            INPUT_OPACITY,
-                        ))
-                        .background_color(Color32::from_rgba_premultiplied(
-                            INPUT_BG_COLOR,
-                            INPUT_BG_COLOR,
-                            INPUT_BG_COLOR,
-                            INPUT_OPACITY,
-                        ))
-                        .text_color_opt(Some(Color32::from_rgba_premultiplied(
-                            INPUT_TEXT_COLOR,
-                            INPUT_TEXT_COLOR,
-                            INPUT_TEXT_COLOR,
-                            INPUT_OPACITY,
-                        ))),
+                        .text_color(self.theme.INPUT_TEXT_COLOR)
+                        .background_color(self.theme.INPUT_BG_COLOR)
+                        .text_color_opt(Some(self.theme.INPUT_TEXT_COLOR)),
                 );
                 input_item.request_focus();
 
@@ -186,7 +193,7 @@ impl eframe::App for NocastApp {
                         scroll_ui.vertical(|panel_ui| {
                             for i in items {
                                 index += 1;
-                                ui::render_item(panel_ui, i, self.wc.1.y, self.selecting == index);
+                                ui::render_item(panel_ui, i, self.wc.1.y, self.selecting == index, self);
                             }
                         });
                     });

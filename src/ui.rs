@@ -1,14 +1,15 @@
 use egui::{self, Color32};
 use crate::generic_types::Item;
 use crate::config::*;
+use egui::{RichText, TextStyle, WidgetText, Label};
 
-pub fn render_item(ui: &mut egui::Ui, i: Item, height: f32, selected: bool) -> egui::Response {
+pub fn render_item(ui: &mut egui::Ui, i: Item, height: f32, selected: bool, app: &mut crate::generic_types::NocastApp) -> egui::Response {
     ui.set_min_height(height);
 
     let bg_color = if selected {
-        egui::Color32::from_rgba_premultiplied(ITEM_WHITE, ITEM_WHITE, ITEM_WHITE, ITEM_OPACITY)
+        app.theme.SELECTED_ITEM_COLOR
     } else {
-        egui::Color32::from_rgba_premultiplied(ITEM_LIGHT_GRAY, ITEM_LIGHT_GRAY, ITEM_LIGHT_GRAY, ITEM_OPACITY)
+        app.theme.NORMAL_ITEM_COLOR
     };
 
     // Use a frame with exact height allocation
@@ -31,25 +32,31 @@ pub fn render_item(ui: &mut egui::Ui, i: Item, height: f32, selected: bool) -> e
             // Text container (expands horizontally)
             ui.vertical(|ui| {
                 ui.add_space(2.0); // Vertical centering adjustment
-                ui.label(
-                    egui::RichText::new(&i.title)
-                        //.font(egui::FontId { size: height, family: egui::FontFamily::Monospace})
-                        .color(Color32::from_rgba_premultiplied(ITEM_TITLE_COLOR, ITEM_TITLE_COLOR, ITEM_TITLE_COLOR, ITEM_OPACITY))
+                ui.add(
+                	Label::new(
+    					WidgetText::from(
+        					egui::RichText::new(&i.title)
+                    		//.font(egui::FontId { size: height, family: egui::FontFamily::Monospace})
+                    		.color(app.theme.ITEM_TITLE_COLOR)
+    					)
+					)
+    				.truncate(),
                 );
-                ui.label(
-                    egui::RichText::new(&i.description)
-                        .small()
-                        .color(Color32::from_rgba_premultiplied(ITEM_DESC_COLOR, ITEM_DESC_COLOR, ITEM_DESC_COLOR, ITEM_OPACITY))
+                ui.add(
+                	Label::new(
+    					WidgetText::from(
+        				 egui::RichText::new(&i.description)
+                       	 .small()
+                      	  .color(app.theme.ITEM_DESC_COLOR)
+						)
+					)
+    				.truncate(),
                 );
-            });
+    	   });
 
             // Right-align keyboard shortcut
             ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-                ui.label(
-                    egui::RichText::new("Ctrl+A")
-                        .small()
-                        .weak()
-                );
+                //nothing, just for the rect to take full width
             });
         });
     }).response

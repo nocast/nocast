@@ -57,5 +57,6 @@ pub struct NocastApp {
     pub previous_query: String,
     pub plugins: Vec<Plugin>,
     pub config: Config,
-    pub current_items: Vec<Item>
+    pub current_items: Vec<Item>,
+    pub theme: crate::config::Theme
 }
