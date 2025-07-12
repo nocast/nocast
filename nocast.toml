@@ -1,0 +1,2 @@
+[plugins]
+linuxlauncher = "./plugins/linuxlauncher.toml"
