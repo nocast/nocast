@@ -11,9 +11,7 @@ Currently, the only way to install this is building it from source. To do it you
 which you can install with [the normal Rust installation](https://rustup.rs/).
 
 With rust installed, run the following commands:
-- `git clone https://github.com/roger-padrell/nocast`
-- `cd nocast`
-- `cargo install --path .`
+- `cargo install --git https://github.com/roger-padrell/nocast.git`
 - `nocast setup`
 
 ## Creating plugins
