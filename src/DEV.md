@@ -6,7 +6,7 @@ Nocast plugins are written in **Rust**.
 For easily creating the rust project that later will become the plugin, we've created a template that can be used with `cargo-generate`
 with the following command:
 ```bash
-cargo generate roger-padrell/nocast_plugintemplate
+cargo generate nocast/plugintemplate
 ```
 This template will ask for plugin name (project name), author and license. The last one needs to be open-source.
 
@@ -49,7 +49,7 @@ autorun = false
 This is the main file of your plugin. You can have other files that need to be included in it using `mod subfile`.
 This file contains all the functions that your actions can call.
 
-### Using `nocast_plugincore`
+### Using `nocast/plugincore`
 This module is essential for the creation of plugins. If you create the plugin using the template, the import statement will already be
 at the top of your `lib.rs` file.
 
@@ -92,7 +92,3 @@ when the item is runned, followed by a context string that will be passed to tha
 Multiple functions can be in the `lib.rs` file, as it's the only one that can contain them. 
 
 All of them need to have the same structure.
-
-## Publishing the plugin
-Right now, there is not a solid system to publish plugins, as the installing and uninstalling commands are `.fish` files.
-We're working on creating this crucial element for the nocast launcher.

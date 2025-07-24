@@ -6,7 +6,7 @@ Nocast plugins are written in **Rust**.
 For easily creating the rust project that later will become the plugin, we've created a template that can be used with `cargo-generate`
 with the following command:
 ```bash
-cargo generate roger-padrell/nocast_plugintemplate
+cargo generate nocast/plugintemplate
 ```
 This template will ask for plugin name (project name), author and license. The last one needs to be open-source.
 
