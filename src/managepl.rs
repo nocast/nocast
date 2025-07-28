@@ -6,6 +6,7 @@ use toml::Value;
 use crate::init::load_config;
 use reqwest::blocking;
 use std::error::Error;
+use std::collections::HashMap;
 
 fn build_crate(manifest_path: &str) -> Result<(), String> {
     // Execute the cargo command
@@ -85,20 +86,29 @@ fn install_local_plugin(dir: String) {
 
 	// Install
 	println!("- Installing plugin at `{}`...", &target_path);
-    
-    // copy manifest
+      
+    // read manifest
 	println!("	- Copying manifest...");
     let manifest_content: String = fs::read_to_string(dir.clone() + "/manifest.toml").expect("Could not read manifest");
+    let manifest_toml: crate::generic_types::PluginManifest = toml::from_str(&manifest_content).expect("Could not parse plugin's manifest");
+    
+    // copy manifest
     fs::write((target_path.clone() + &name) + ".toml", manifest_content).expect("Could not write new manifest");
     
     // copy core
 	println!("	- Copying plugin core...");
     fs::copy(dir.clone() + "/target/release/lib" + &name + ".so", (target_path.clone() + &name) + ".so").expect("Could not copy core");
-
-	// add to config
+	
+    // build plugin config (all actions active)
+    let mut plugin_config: HashMap<String, bool> = HashMap::new();
+    for action in manifest_toml.actions{
+        plugin_config.insert(action.name, true);
+    }
+    
+	// add everything to config
 	println!("- Adding to config file...");
     let mut config_cont = load_config();
-    config_cont.plugins.insert(name.clone(), format!("{}{}.toml", &target_path, &name));
+    config_cont.plugins.insert(name.clone(), (format!("{}{}.toml", &target_path, &name), plugin_config)); //ERROR HERE
 	fs::write(bin_path() + "/nocast.toml", toml::to_string_pretty(&config_cont).expect("Could not generate config file")).expect("Could not write config file");
 	
 	println!("Plugin installed! :)");

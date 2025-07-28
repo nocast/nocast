@@ -56,6 +56,9 @@ pub fn query_items(main: &NocastApp) -> Vec<Item> {
     let mut items: Vec<Item> = Vec::new();
     for pl in main.plugins.clone(){
         for a in pl.actions{
+            if main.config.plugins.clone().get(&pl.name).unwrap().1.get(&a.name).unwrap() == &false {
+                continue;
+            }
             let re = Regex::new(&a.expression).unwrap();
             if let Some(caps) = re.captures(&main.query) {
                 // Skip group 0 (the full match), collect only capture groups

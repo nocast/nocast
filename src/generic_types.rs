@@ -1,9 +1,11 @@
 use std::collections::HashMap;
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Deserialize, Serialize)]
+pub type PluginConfig = (String, HashMap<String, bool>); // (Path, <ActionName, active?>)
+
+#[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct Config {
-   pub plugins: HashMap<String, String>,
+   pub plugins: HashMap<String, PluginConfig>,
 }
 
 #[derive(Debug, Deserialize, Clone)]

@@ -7,6 +7,7 @@ mod monitor;
 mod ui;
 mod utils;
 mod win;
+mod config_app;
 mod app;
 mod managepl;
 mod setup;
@@ -23,6 +24,9 @@ fn main(){
 	}
     else if args[1] == "setup" {
         setup();
+    }
+    else if args[1] == "config" {
+        crate::config_app::config_app();
     }
     else if args[1] == "list"{
 		crate::managepl::list_plugins();
