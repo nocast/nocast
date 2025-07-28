@@ -82,7 +82,7 @@ pub fn start_app() {
         ..Default::default()
     };
     let _ = eframe::run_native(
-        "Nocastpb - plugin-based search bar",
+        "NoCast",
         ops,
         Box::new(|cc| Ok(Box::new(NocastApp::new(cc, window_const)))),
     );
