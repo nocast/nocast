@@ -4,7 +4,7 @@ use std::collections;
 
 use crate::{ui, engine, init};
 use crate::config::load_theme;
-use crate::generic_types::{Item, NocastApp, Config};
+use crate::generic_types::{Item, NocastApp, Config, ThemeMode, parse};
 use crate::win::{MAX_ITEMS, get_window};
 use dark_light;
 
@@ -19,6 +19,7 @@ impl Default for NocastApp {
             plugins: Vec::new(),
             config: Config {
                 plugins: (std::collections::HashMap::new()),
+				theme: ThemeMode::Unspecified
             },
             theme: crate::config::load_theme(true)
         }
@@ -29,8 +30,12 @@ impl NocastApp {
     pub fn new(cc: &eframe::CreationContext<'_>, wc: (egui::Pos2, egui::Vec2)) -> Self {
         let config = init::load_config();
         let plugins = init::load_plugins(&config);
-        match dark_light::detect().unwrap_or(dark_light::Mode::Unspecified) {
-        	dark_light::Mode::Dark => {
+		let mut theme: ThemeMode = config.theme.clone();
+		if theme == ThemeMode::Unspecified {
+			theme = parse(dark_light::detect().unwrap_or(dark_light::Mode::Unspecified));
+		}
+        match theme{
+        	ThemeMode::Dark => {
             	Self {
             		config: config,
             		plugins: plugins,
@@ -39,7 +44,7 @@ impl NocastApp {
             		..Default::default()
         		}
         	},
-        	dark_light::Mode::Light => {
+        	ThemeMode::Light => {
             	Self {
             		config: config,
             		plugins: plugins,
@@ -48,7 +53,7 @@ impl NocastApp {
             		..Default::default()
         		}
         	},
-        	dark_light::Mode::Unspecified => {
+        	ThemeMode::Unspecified => {
             	Self {
             		config: config,
             		plugins: plugins,

@@ -16,6 +16,6 @@ pub fn setup(){
     
     // create new setup
     println!("Creating new setup...");
-    fs::write(bin_path() + "/nocast.toml", "[plugins]").expect("Could not create config file");
+    fs::write(bin_path() + "/nocast.toml", "theme = \"Unspecified\"\n[plugins]").expect("Could not create config file");
     fs::create_dir(bin_path() + "/plugins/").expect("Could not create plugins dir");
 }

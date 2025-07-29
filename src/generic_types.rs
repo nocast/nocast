@@ -1,11 +1,40 @@
 use std::collections::HashMap;
 use serde::{Deserialize, Serialize};
+use dark_light::Mode;
 
 pub type PluginConfig = (String, HashMap<String, bool>); // (Path, <ActionName, active?>)
 
+#[derive(Debug, Deserialize, Serialize, Clone, PartialEq)]
+pub enum ThemeMode {
+	Light, Dark, Unspecified
+}
+
+impl ThemeMode {
+    pub fn all() -> [ThemeMode; 3] {
+        [ThemeMode::Dark, ThemeMode::Light, ThemeMode::Unspecified]
+    }
+
+    pub fn label(&self) -> &'static str {
+        match self {
+            ThemeMode::Dark => "Dark",
+            ThemeMode::Light => "Light",
+            ThemeMode::Unspecified => "System",
+        }
+    }
+}
+
+pub fn parse(mode: Mode) -> ThemeMode {
+    match mode {
+        Mode::Dark => ThemeMode::Dark,
+        Mode::Light => ThemeMode::Light,
+        Mode::Unspecified => ThemeMode::Unspecified,
+    }
+}
+
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct Config {
-   pub plugins: HashMap<String, PluginConfig>,
+    pub plugins: HashMap<String, PluginConfig>,
+	pub theme: ThemeMode
 }
 
 #[derive(Debug, Deserialize, Clone)]

@@ -10,6 +10,7 @@ use crate::ncpr;
 use std::sync::{Arc, Mutex};
 use std::thread;
 use std::env;
+use crate::generic_types::ThemeMode;
 
 #[derive(PartialEq)]
 pub enum ConfigAppTabs {
@@ -31,6 +32,7 @@ impl Default for ConfigApp {
         Self {
         	config: Config {
             	plugins: (std::collections::HashMap::new()),
+				theme: crate::generic_types::ThemeMode::Unspecified
         	}, 
         	tab: ConfigAppTabs::Style,
 			plugin_search: String::new(),
@@ -90,8 +92,8 @@ impl eframe::App for ConfigApp {
     	let mut config_changed = false;
         //tab-specific
         egui::CentralPanel::default().show(ctx, |ui| {
-			//refresh if not on actions
-			if self.tab != ConfigAppTabs::Actions{
+			//refresh if not actions or style
+			if self.tab != ConfigAppTabs::Actions && self.tab != ConfigAppTabs::Style{
 				self.config = load_config();
 			}
 			//installing?
@@ -107,6 +109,17 @@ impl eframe::App for ConfigApp {
         	match self.tab{
             	ConfigAppTabs::Style => {
             	    //style
+					let ptheme = self.config.theme.clone();
+					egui::ComboBox::from_label("Theme")
+                		.selected_text(self.config.theme.label())
+                		.show_ui(ui, |ui| {
+                        	for mode in ThemeMode::all() {
+                        		ui.selectable_value(&mut self.config.theme, mode.clone(), mode.label());
+                    		}
+                		});
+					if ptheme != self.config.theme.clone(){
+						config_changed = true;
+					}
             	}
 				ConfigAppTabs::About => {
             	    //about
