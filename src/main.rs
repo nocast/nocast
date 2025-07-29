@@ -18,14 +18,33 @@ use crate::utils::bin_path;
 use std::fs;
 use crate::setup::setup;
 
+fn update() {
+    let status = Command::new("cargo")
+        .args(&["install", "--git", "https://github.com/nocast/nocast.git"])
+        .status()
+        .expect("Failed to execute update command");
+
+    if status.success() {
+        println!("Successfully updated nocast!");
+    } else {
+        eprintln!("Update failed.");
+    }
+}
+
 fn main(){
     let args: Vec<String> = env::args().collect();
     if (args.len() < 2){
     	start_app();
 	}
+	else if args[1] == "version" {
+		println!("nocast {}",env!("CARGO_PKG_VERSION"));
+	}
     else if args[1] == "setup" {
         setup();
     }
+	else if args[1] == "update" {
+		update();
+	}
     else if args[1] == "config" {
         crate::config_app::config_app();
     }
