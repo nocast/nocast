@@ -88,3 +88,6 @@ struct ActionOutput {
 ```
 The name and description elements are very easy to understand. The target element is a string containing the function that will run
 when the item is runned, followed by a context string that will be passed to that function. It has the following structure: `target_function,context`.
+
+## Publishing the plugin
+As the plugins are published to the NCPR (NoCast Plugin Registry), there is a guide on it in the [NCPR repo](https://github.com/nocast/ncpr#publishing-a-package).
