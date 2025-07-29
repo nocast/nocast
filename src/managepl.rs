@@ -4,9 +4,8 @@ use std::io::{self, Write};
 use std::{fs, path::Path};
 use toml::Value;
 use crate::init::load_config;
-use reqwest::blocking;
-use std::error::Error;
 use std::collections::HashMap;
+use crate::ncpr;
 
 fn build_crate(manifest_path: &str) -> Result<(), String> {
     // Execute the cargo command
@@ -114,17 +113,6 @@ fn install_local_plugin(dir: String) {
 	println!("Plugin installed! :)");
 }
 
-fn fetch_ncpr(plugin: &str) -> Result<String, Box<dyn Error>> {
-    let response = blocking::get("https://ncpr.roger-padrell.deno.net/api/repo/".to_string() + plugin)?;
-
-    if !response.status().is_success() {
-        return Err(format!("HTTP error: {}", response.status()).into());
-    }
-
-    let body = response.text()?;
-    Ok(body)
-}
-
 fn install_git_plugin (repo: String) {
     // remove templugin for precaution
     if Path::new(&(bin_path() + "/templugin")).is_dir(){
@@ -156,7 +144,7 @@ pub fn install_plugin(name: String) {
         install_local_plugin(name);
     }
     else{
-        match fetch_ncpr(&name) {
+        match ncpr::get_repo(&name) {
         	Ok(body) => {
             	if body == "404"{
                 	eprintln!("This plugin does not exist, it's not a git repo or a existing local directory.");

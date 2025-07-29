@@ -5,6 +5,7 @@ mod generic_types;
 mod init;
 mod monitor;
 mod ui;
+mod ncpr;
 mod utils;
 mod win;
 mod config_app;
