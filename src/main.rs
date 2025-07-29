@@ -17,6 +17,7 @@ use std::env;
 use crate::utils::bin_path;
 use std::fs;
 use crate::setup::setup;
+use std::process::Command;
 
 fn update() {
     let status = Command::new("cargo")

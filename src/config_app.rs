@@ -1,6 +1,7 @@
 use crate::generic_types::Config;
 use crate::init::load_config;
 use eframe;
+use eframe::egui::Hyperlink;
 use std::fs;
 use toml;
 use crate::utils::bin_path;
@@ -8,10 +9,11 @@ use crate::managepl;
 use crate::ncpr;
 use std::sync::{Arc, Mutex};
 use std::thread;
+use std::env;
 
 #[derive(PartialEq)]
 pub enum ConfigAppTabs {
-	Style, Uninstall, Actions, Install
+	Style, Uninstall, Actions, Install, About
 }
 
 pub struct ConfigApp {
@@ -79,6 +81,9 @@ impl eframe::App for ConfigApp {
                 if ui.selectable_label(self.tab == ConfigAppTabs::Actions, "Actions").clicked() {
                     self.tab = ConfigAppTabs::Actions;
                 }
+				if ui.selectable_label(self.tab == ConfigAppTabs::About, "About").clicked() {
+                    self.tab = ConfigAppTabs::About;
+                }
             });
         });
         
@@ -103,6 +108,24 @@ impl eframe::App for ConfigApp {
             	ConfigAppTabs::Style => {
             	    //style
             	}
+				ConfigAppTabs::About => {
+            	    //about
+					ui.heading("Nocast");
+					ui.label(format!("Nocast version: {}", env!("CARGO_PKG_VERSION")));
+					ui.separator();
+					ui.label("This software has been created by nocast and contributors.");
+					ui.label("It's OPEN SOURCE, written in Rust. Hosted");
+					ui.add(Hyperlink::from_label_and_url("on a GitHub repo", "https://github.com/nocast/nocast"));
+					ui.separator();
+					ui.label("While the core is mainly built by nocast, the product works thanks to the plugins contributed by other persons.");
+            		ui.label("The plugins are published on the NCPR (NoCast Plugin Registry), another open source project written in TypeScript and powered by Deno Deploy.");
+					ui.add(Hyperlink::from_label_and_url("Go to the NCPR website", "https://ncpr.roger-padrell.deno.net/"));
+					ui.separator();
+					ui.label("The project has a website too,");
+					ui.add(Hyperlink::from_label_and_url("check it here", "https://nocast.github.io/site/"));
+					ui.separator();
+					ui.label("Thanks for using our product. It's released under the MIT License, which you can check on the source mentrioned above.");
+				}
 				ConfigAppTabs::Install => {
             	    //install
 					ui.label("Here you can search and install plugins");
