@@ -178,7 +178,9 @@ impl eframe::App for ConfigApp {
 					ui.label("Caution!: when a plugin is clicked, it will be uninstalled without verification!");
 					ui.separator();
 					ui.heading("Installed plugins");
-            		for (plugin, _) in self.config.plugins.clone(){
+					let mut pluginlist: Vec<String> = self.config.plugins.keys().cloned().collect();
+					pluginlist.sort();
+            		for (plugin) in pluginlist{
 						if ui.button(&plugin).clicked() {
                     		managepl::uninstall_plugin(plugin);
                 		}
